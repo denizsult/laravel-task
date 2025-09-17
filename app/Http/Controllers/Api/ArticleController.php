@@ -10,6 +10,19 @@ use Illuminate\Http\JsonResponse;
 class ArticleController extends Controller
 {
     /**
+     * Display a listing of the resource.
+     */
+    public function index(): JsonResponse
+    {
+        $articles = Article::orderBy('created_at', 'desc')
+            ->get();
+
+        return response()->json([
+            'data' => ArticleResource::collection($articles),
+        ]);
+    }
+
+    /**
      * Display the specified resource.
      */
     public function show(Article $article): JsonResponse

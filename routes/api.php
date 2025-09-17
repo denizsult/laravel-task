@@ -33,6 +33,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
 /* Articles routes */
 Route::prefix('articles')->group(function () {
+    Route::get('/', [ArticleController::class, 'index']);
     Route::get('/{article}', [ArticleController::class, 'show']);
     Route::get('/{article}/comments', [CommentController::class, 'index']);
     Route::post('/{article}/comments', [CommentController::class, 'store'])->middleware(['throttle:10,1', 'auth:sanctum']);
