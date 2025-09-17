@@ -42,6 +42,8 @@ class ModerateCommentJob implements ShouldQueue
         $containsBannedWords = $this->hasBannedWords();
         $newStatus = $containsBannedWords ? 'rejected' : 'published';
         $this->comment->update(['status' => $newStatus]);
+
+        $this->invalidateCommentCache();
     }
 
 
@@ -66,5 +68,13 @@ class ModerateCommentJob implements ShouldQueue
         }
 
         return false;
+    }
+
+
+    private function invalidateCommentCache(): void
+    {
+        $articleId = $this->comment->article_id;
+
+        Cache::tags(["article:{$articleId}"])->flush();        
     }
 }
