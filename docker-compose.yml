@@ -16,25 +16,15 @@ services:
     depends_on:
       - db
       - cache
-    environment:
-      - DB_CONNECTION=pgsql
-      - DB_HOST=db
-      - DB_PORT=5432
-      - DB_DATABASE=laravel_task
-      - DB_USERNAME=laravel
-      - DB_PASSWORD=password
-      - REDIS_HOST=cache
-      - REDIS_PASSWORD=null
-      - REDIS_PORT=6379
-      - CACHE_STORE=redis
-      - QUEUE_CONNECTION=redis
+    env_file:
+      - .env
 
   webserver:
     image: nginx:alpine
     container_name: laravel-webserver
     restart: unless-stopped
     ports:
-      - "8000:80"
+      - "8080:80"
     volumes:
       - ./:/var/www/html
       - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
@@ -50,9 +40,9 @@ services:
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_DB: laravel_task
-      POSTGRES_USER: laravel
-      POSTGRES_PASSWORD: password
+      POSTGRES_DB: ${DB_DATABASE}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
@@ -84,18 +74,8 @@ services:
       - cache
     networks:
       - laravel-network
-    environment:
-      - DB_CONNECTION=pgsql
-      - DB_HOST=db
-      - DB_PORT=5432
-      - DB_DATABASE=laravel_task
-      - DB_USERNAME=laravel
-      - DB_PASSWORD=password
-      - REDIS_HOST=cache
-      - REDIS_PASSWORD=null
-      - REDIS_PORT=6379
-      - CACHE_STORE=redis
-      - QUEUE_CONNECTION=redis
+    env_file:
+      - .env
 
 networks:
   laravel-network:

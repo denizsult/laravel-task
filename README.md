@@ -65,84 +65,33 @@ A Laravel 12.x application with comment moderation system using Redis cache and 
 
 3. **Build and start all services:**
    ```bash
-   docker-compose up -d --build
+   docker compose up -d --build
    ```
 
 4. **Install dependencies and setup application:**
    ```bash
-   docker-compose exec app composer install
-   docker-compose exec app php artisan key:generate
-   docker-compose exec app php artisan migrate --seed
+   docker compose exec app composer install
+   docker compose exec app php artisan key:generate
+   docker compose exec app php artisan migrate --seed
    ```
 
 5. **Access the application:**
-   - **Application:** http://localhost:8000
+   - **Application:** http://localhost:8080
    - **Database:** localhost:5432 (user: laravel, password: password)
    - **Redis:** localhost:6379
 
 **Docker Services:**
 - `app` - Laravel application (PHP 8.3-FPM)
-- `webserver` - Nginx web server (port 8000)
+- `webserver` - Nginx web server (port 8080)
 - `db` - PostgreSQL 15 database (port 5432)
 - `cache` - Redis 7 for caching and sessions (port 6379)
 - `queue-worker` - Automatic background queue processing
 
 
 
-### Local Development (Alternative)
-
-1. Requirements:
-   - PHP 8.3+
-   - PostgreSQL 15+
-   - Redis 7+
-   - Composer
-
-2. Install dependencies:
-   ```bash
-   composer install
-   ```
-
-3. Setup environment:
-   ```bash
-   cp .env.example .env
-   php artisan key:generate
-   ```
-
-4. Configure database and Redis in `.env`:
-   ```
-   DB_CONNECTION=pgsql
-   DB_HOST=127.0.0.1
-   DB_PORT=5432
-   DB_DATABASE=laravel_task
-   DB_USERNAME=your_username
-   DB_PASSWORD=your_password
-
-   REDIS_HOST=127.0.0.1
-   REDIS_PORT=6379
-   CACHE_STORE=redis
-   QUEUE_CONNECTION=redis
-   ```
-
-5. Run migrations and seeders:
-   ```bash
-   php artisan migrate --seed
-   ```
-
-6. Start queue worker:
-   ```bash
-   php artisan queue:work
-   ```
-
-7. Start development server:
-   ```bash
-   php artisan serve
-   ```
-
-## Testing
-
 ### Using Docker:
 ```bash
-docker-compose exec app php artisan test
+docker compose exec app php artisan test
 ```
 
 ### Local Development:
@@ -199,14 +148,14 @@ The seeder creates:
 
 ### Login
 ```bash
-curl -X POST http://localhost:8000/api/auth/login \
+curl -X POST http://localhost:8080/api/auth/login \
   -H "Content-Type: application/json" \
   -d '{"email": "john@example.com", "password": "password"}'
 ```
 
 ### Create Comment
 ```bash
-curl -X POST http://localhost:8000/api/articles/{article-id}/comments \
+curl -X POST http://localhost:8080/api/articles/{article-id}/comments \
   -H "Authorization: Bearer {token}" \
   -H "Content-Type: application/json" \
   -d '{"content": "Great article!"}'
@@ -214,6 +163,6 @@ curl -X POST http://localhost:8000/api/articles/{article-id}/comments \
 
 ### Get Comments
 ```bash
-curl http://localhost:8000/api/articles/{article-id}/comments?page=1&per_page=10
+curl http://localhost:8080/api/articles/{article-id}/comments?page=1&per_page=10
 ```
  
