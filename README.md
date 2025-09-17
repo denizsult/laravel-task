@@ -53,24 +53,43 @@ A Laravel 12.x application with comment moderation system using Redis cache and 
 
 ### Using Docker (Recommended)
 
-1. Clone the repository
-2. Copy environment file:
+1. **Requirements:**
+   - Docker
+   - Docker Compose
+
+2. **Clone the repository:**
    ```bash
-   cp .env.example .env
+   git clone <repository-url>
+   cd laravel-task
    ```
-3. Build and start containers:
+
+3. **Build and start all services:**
    ```bash
    docker-compose up -d --build
    ```
-4. Install dependencies and setup:
+
+4. **Install dependencies and setup application:**
    ```bash
    docker-compose exec app composer install
    docker-compose exec app php artisan key:generate
    docker-compose exec app php artisan migrate --seed
    ```
-5. Access the application at `http://localhost:8000`
 
-### Local Development
+5. **Access the application:**
+   - **Application:** http://localhost:8000
+   - **Database:** localhost:5432 (user: laravel, password: password)
+   - **Redis:** localhost:6379
+
+**Docker Services:**
+- `app` - Laravel application (PHP 8.3-FPM)
+- `webserver` - Nginx web server (port 8000)
+- `db` - PostgreSQL 15 database (port 5432)
+- `cache` - Redis 7 for caching and sessions (port 6379)
+- `queue-worker` - Automatic background queue processing
+
+
+
+### Local Development (Alternative)
 
 1. Requirements:
    - PHP 8.3+
@@ -121,14 +140,14 @@ A Laravel 12.x application with comment moderation system using Redis cache and 
 
 ## Testing
 
-Run the test suite:
+### Using Docker:
 ```bash
-php artisan test
+docker-compose exec app php artisan test
 ```
 
-Run with coverage:
+### Local Development:
 ```bash
-php artisan test --coverage
+php artisan test
 ```
 
 ## Comment Moderation
@@ -197,20 +216,4 @@ curl -X POST http://localhost:8000/api/articles/{article-id}/comments \
 ```bash
 curl http://localhost:8000/api/articles/{article-id}/comments?page=1&per_page=10
 ```
-
-## Development
-
-### Code Style
-```bash
-./vendor/bin/pint
-```
-
-### Static Analysis
-```bash
-composer require --dev phpstan/phpstan
-./vendor/bin/phpstan analyse
-```
-
-## License
-
-This project is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+ 
