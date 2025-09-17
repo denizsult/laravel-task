@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Events\CommentCreating;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -26,6 +27,15 @@ class Comment extends Model
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
         ];
+    }
+
+
+    protected static function boot()
+    {
+        parent::boot();
+        static::creating(function ($comment) {
+            CommentCreating::dispatch($comment);
+        });
     }
 
 

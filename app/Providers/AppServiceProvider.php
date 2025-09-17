@@ -2,6 +2,9 @@
 
 namespace App\Providers;
 
+use App\Events\CommentCreating;
+use App\Listeners\ModerateCommentListener;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -19,6 +22,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        // Register event listeners
+        Event::listen(
+            CommentCreating::class,
+            ModerateCommentListener::class
+        );
     }
 }

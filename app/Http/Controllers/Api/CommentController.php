@@ -10,7 +10,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
- 
+
 
 class CommentController extends Controller
 {
@@ -22,34 +22,28 @@ class CommentController extends Controller
         $page = max(1, (int) $page);
         $perPage = min(50, max(1, (int) $perPage));
 
-        $cacheKey = "comments:article:{$article->id}:page:{$page}";
+        $cacheKey = "comments:article:{$article->id}:page:{$page}:per_page:{$perPage}";
         $cacheTtl = config('comments.cache_ttl', 60);
 
         $result = Cache::tags(["article:{$article->id}"])->remember($cacheKey, $cacheTtl, function () use ($article, $page, $perPage) {
-            try {
-                $comments = $article->comments()
-                    ->published()
-                    ->with('user')
-                    ->orderBy('created_at', 'desc')
-                    ->paginate($perPage, ['*'], 'page', $page);
+            $comments = $article->comments()
+                ->with('user')
+                ->orderBy('created_at', 'desc')
+                ->paginate($perPage, ['*'], 'page', $page);
 
-                $result = [
-                    'data' => CommentResource::collection($comments->items()),
-                    'pagination' => [
-                        'current_page' => $comments->currentPage(),
-                        'per_page' => $comments->perPage(),
-                        'total' => $comments->total(),
-                        'last_page' => $comments->lastPage(),
-                        'from' => $comments->firstItem(),
-                        'to' => $comments->lastItem(),
-                    ],
-                ];
+            $result = [
+                'data' => CommentResource::collection($comments->items()),
+                'pagination' => [
+                    'current_page' => $comments->currentPage(),
+                    'per_page' => $comments->perPage(),
+                    'total' => $comments->total(),
+                    'last_page' => $comments->lastPage(),
+                    'from' => $comments->firstItem(),
+                    'to' => $comments->lastItem(),
+                ],
+            ];
 
-                return $result;
-            } catch (\Exception $e) {
-                Log::error("Error in cache callback: " . $e->getMessage());
-                throw $e;
-            }
+            return $result;
         });
 
         return response()->json($result);
