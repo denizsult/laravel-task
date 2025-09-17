@@ -60,6 +60,8 @@ class CommentController extends Controller
             'status' => 'pending',
         ]);
 
+        Cache::tags(names: ["article:{$article->id}"])->flush(); 
+
         return response()->json([
             'comment_id' => $comment->id,
             'message' => 'Comment submitted for moderation',
