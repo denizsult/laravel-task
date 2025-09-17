@@ -70,9 +70,9 @@ A Laravel 12.x application with comment moderation system using Redis cache and 
 
 4. **Install dependencies and setup application:**
    ```bash
-   docker compose exec app composer install
-   docker compose exec app php artisan key:generate
-   docker compose exec app php artisan migrate --seed
+   docker compose exec laravel-app composer install
+   docker compose exec laravel-app php artisan key:generate
+   docker compose exec laravel-app php artisan migrate --seed
    ```
 
 5. **Access the application:**
@@ -87,17 +87,6 @@ A Laravel 12.x application with comment moderation system using Redis cache and 
 - `cache` - Redis 7 for caching and sessions (port 6379)
 - `queue-worker` - Automatic background queue processing
 
-
-
-### Using Docker:
-```bash
-docker compose exec app php artisan test
-```
-
-### Local Development:
-```bash
-php artisan test
-```
 
 ## Comment Moderation
 
